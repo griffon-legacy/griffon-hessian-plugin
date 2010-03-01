@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 the original author or authors.
+ * Copyright 2009-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,38 +14,33 @@
  * limitations under the License.
  */
 
-import griffon.util.IGriffonApplication
 import griffon.hessian.HessianProxy
 import griffon.hessian.BurlapProxy
 
 import java.lang.reflect.InvocationTargetException
 
 /**
- * @author Andres.Almiray
+ * @author Andres Almiray
  */
 class HessianGriffonAddon {
-   private IGriffonApplication application
    private static final Class[] CTOR_ARGS1 = [String, Class] as Class[]
    private static final Class[] CTOR_ARGS2 = [String, String] as Class[]
 
-   def addonInit = { app ->
-      application = app
-      app.addApplicationEventListener(this)
-   }
-
-   def onNewInstance = { klass, type, instance ->
-      def types = application.config.griffon?.hessian?.injectInto ?: ["controller"]
-      if(!types.contains(type)) return
-      instance.metaClass.withHessian = withClient.curry(HessianProxy, instance)
-      instance.metaClass.withBurlap = withClient.curry(BurlapProxy, instance)
-   }
+   def events = [
+      NewInstance: { klass, type, instance ->
+         def types = app.config.griffon?.hessian?.injectInto ?: ['controller']
+         if(!types.contains(type)) return
+         instance.metaClass.withHessian = withClient.curry(HessianProxy, instance)
+         instance.metaClass.withBurlap = withClient.curry(BurlapProxy, instance)
+      }
+   ]
 
    // ======================================================
 
    private withClient = { Class klass, Object instance, Map params, Closure closure ->
       def client = null
       if(params.id) {
-         String id = params.remove("id").toString()
+         String id = params.remove('id').toString()
          if(instance.metaClass.hasProperty(instance, id)) {
             client = instance."$id"
          } else {
@@ -64,13 +59,13 @@ class HessianGriffonAddon {
    }
 
    private makeClient(Class klass, Map params) {
-      def url = params.remove("url")
+      def url = params.remove('url')
       if(!url) {
          throw new RuntimeException("Failed to create ${(klass == HessianProxy? 'hessian' : 'burlap')} client, url: parameter is null or invalid.")
       }
 
       def ctorArgs = CTOR_ARGS1
-      def serviceClass = params.remove("service")
+      def serviceClass = params.remove('service')
       if(!serviceClass) {
          throw new RuntimeException("Failed to create ${(klass == HessianProxy? 'hessian' : 'burlap')} client, service: parameter is null or invalid.")
       }
