@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package griffon.plugins.hessian;
+
+import java.util.Map;
+import groovy.lang.Closure;
+import griffon.util.CallableWithArgs;
 
 /**
  * @author Andres Almiray
  */
-
-// check to see if we already have a HessianGriffonAddon
-configText = '''root.'HessianGriffonAddon'.addon=true'''
-if(builderConfigFile.text.contains(configText)) {
-    println 'Removing HessianGriffonAddon from Builder.groovy'
-    builderConfigFile.text -= configText
+public interface HessianProvider {
+    Object withHessian(Map params, Closure closure);
+    
+    Object withBurlap(Map params, Closure closure);
+    
+    <T> T withHessian(Map params, CallableWithArgs<T> callable);
+    
+    <T> T withBurlap(Map params, CallableWithArgs<T> callable);
 }

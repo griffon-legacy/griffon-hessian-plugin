@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-import griffon.plugins.hessian.HessianConnector
+import griffon.plugins.hessian.HessianEnhancer
 
 /**
  * @author Andres Almiray
  */
 class HessianGriffonAddon {
-    def events = [
+    Map events = [
         NewInstance: { klass, type, instance ->
             def types = app.config.griffon?.hessian?.injectInto ?: ['controller']
             if(!types.contains(type)) return
             def mc = app.artifactManager.findGriffonClass(klass).metaClass
-            HessianConnector.enhance(mc, instance)
+            HessianEnhancer.enhance(mc)
         }
     ]
 }
