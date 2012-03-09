@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
+import griffon.core.GriffonClass
+import griffon.core.GriffonApplication
 import griffon.plugins.hessian.HessianEnhancer
 
 /**
  * @author Andres Almiray
  */
 class HessianGriffonAddon {
-    Map events = [
-        NewInstance: { klass, type, instance ->
-            def types = app.config.griffon?.hessian?.injectInto ?: ['controller']
-            if(!types.contains(type)) return
-            def mc = app.artifactManager.findGriffonClass(klass).metaClass
-            HessianEnhancer.enhance(mc)
+    void addonPostInit(GriffonApplication app) {
+        def types = app.config.griffon?.hessian?.injectInto ?: ['controller']
+        for(String type : types) {
+            for(GriffonClass gc : app.artifactManager.getClassesOfType(type)) {
+                HessianEnhancer.enhance(gc.metaClass)
+            }
         }
-    ]
+    }
 }

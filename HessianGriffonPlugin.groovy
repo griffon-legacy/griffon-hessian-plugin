@@ -21,7 +21,7 @@ class HessianGriffonPlugin {
     // the plugin version
     String version = '0.7'
     // the version or versions of Griffon the plugin is designed for
-    String griffonVersion = '0.9.5-SNAPSHOT > *'
+    String griffonVersion = '0.9.5 > *'
     // the other plugins this plugin depends on
     Map dependsOn = [:]
     // resources that are included in plugin packaging
@@ -97,7 +97,7 @@ This example relies on [Grails][3] as the service provider. Follow these steps t
 
         grails install-plugin remoting
 
-4. Create the following interface in `src/groovy/sample/Calculator.groovy`. This interface will be used on the Griffon side too.
+4. Create the following interface in `src/groovy/exporter/Calculator.groovy`. This interface will be used on the Griffon side too.
 
         package exporter 
         interface Calculator {
@@ -176,16 +176,16 @@ types something that is not a number the client will surely break, but the code 
             def calculate = { evt = null ->
                 double a = model.num1.toDouble()
                 double b = model.num2.toDouble()
-                execSync { model.enabled = false }
+                execInsideUISync { model.enabled = false }
                 try {
                     // make sure the url matches Grails conventions
                     def result = withHessian(url: 'http://localhost:8080/exporter/hessian/CalculatorService',
                                              service: 'exporter.Calculator', id: 'calculator') {
                         add(a, b)
                     }
-                    execAsync { model.result = result.toString() }
+                    execInsideUIAsync { model.result = result.toString() }
                 } finally {
-                    execAsync { model.enabled = true }
+                    execInsideUIAsync { model.enabled = true }
                 }
             }
         }
@@ -199,7 +199,7 @@ $griffonProject points to the calculator application
     
 7. Run the application
 
-    griffon run-app
+        griffon run-app
 
 ### Java API
 
