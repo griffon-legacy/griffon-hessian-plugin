@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012 the original author or authors.
+ * Copyright 2009-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 
 import griffon.core.GriffonClass
-import griffon.core.GriffonApplication
 import griffon.plugins.hessian.HessianEnhancer
+import griffon.plugins.hessian.HessianContributionHandler
 
 /**
  * @author Andres Almiray
@@ -26,6 +26,7 @@ class HessianGriffonAddon {
         def types = app.config.griffon?.hessian?.injectInto ?: ['controller']
         for(String type : types) {
             for(GriffonClass gc : app.artifactManager.getClassesOfType(type)) {
+                if (HessianContributionHandler.isAssignableFrom(gc.clazz)) continue
                 HessianEnhancer.enhance(gc.metaClass)
             }
         }

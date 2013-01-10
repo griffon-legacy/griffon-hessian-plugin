@@ -1,35 +1,34 @@
 griffon.project.dependency.resolution = {
-    // implicit variables
-    // pluginName:     plugin's name
-    // pluginVersion:  plugin's version
-    // pluginDirPath:  plugin's install path
-    // griffonVersion: current Griffon version
-    // groovyVersion:  bundled groovy
-    // springVersion:  bundled Spring
-    // antVertsion:    bundled Ant
-    // slf4jVersion:   bundled Slf4j
-
-    // inherit Griffon' default dependencies
     inherits "global"
     log "warn"
     repositories {
         griffonHome()
         mavenCentral()
-
-        // pluginDirPath is only available when installed
-        // String basePath = pluginDirPath? "${pluginDirPath}/" : ''
-        // flatDir name: "${pluginName}LibDir", dirs: ["${basePath}lib"]
+        mavenLocal()
     }
     dependencies {
-        compile 'com.caucho:hessian:4.0.7'
-    }
-}
-
-griffon {
-    doc {
-        logo = '<a href="http://griffon.codehaus.org" target="_blank"><img alt="The Griffon Framework" src="../img/griffon.png" border="0"/></a>'
-        sponsorLogo = "<br/>"
-        footer = "<br/><br/>Made with Griffon (@griffon.version@)"
+        compile('com.caucho:hessian:4.0.7')
+        build('org.eclipse.jdt:org.eclipse.jdt.core:3.6.0.v_A58') {
+            export = false
+        }
+        String lombokIdea = '0.5'
+        build("de.plushnikov.lombok-intellij-plugin:processor-api:$lombokIdea",
+              "de.plushnikov.lombok-intellij-plugin:processor-core:$lombokIdea",
+              "de.plushnikov.lombok-intellij-plugin:intellij-facade-factory:$lombokIdea",
+              "de.plushnikov.lombok-intellij-plugin:intellij-facade-api:$lombokIdea",
+              "de.plushnikov.lombok-intellij-plugin:intellij-facade-9:$lombokIdea",
+              "de.plushnikov.lombok-intellij-plugin:intellij-facade-10:$lombokIdea",
+              "de.plushnikov.lombok-intellij-plugin:intellij-facade-11:$lombokIdea") {
+            export = false
+            transitive = false
+        }
+        String ideaVersion = '11.1.4'
+        build("org.jetbrains.idea:idea-openapi:$ideaVersion",
+              "org.jetbrains.idea:extensions:$ideaVersion",
+              "org.jetbrains.idea:util:$ideaVersion",
+              "org.jetbrains.idea:annotations:$ideaVersion") {
+            export = false
+        }
     }
 }
 

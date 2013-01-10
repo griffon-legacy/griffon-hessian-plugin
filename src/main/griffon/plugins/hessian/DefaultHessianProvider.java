@@ -16,20 +16,29 @@
 
 package griffon.plugins.hessian;
 
-import griffon.util.CallableWithArgs;
-import groovy.lang.Closure;
-
 import java.util.Map;
 
 /**
  * @author Andres Almiray
  */
-public interface HessianProvider {
-    <R> R withHessian(Map<String, Object> params, Closure<R> closure);
+public class DefaultHessianProvider extends AbstractHessianProvider {
+    private static final DefaultHessianProvider INSTANCE;
 
-    <R> R withBurlap(Map<String, Object> params, Closure<R> closure);
+    static {
+        INSTANCE = new DefaultHessianProvider();
+    }
 
-    <R> R withHessian(Map<String, Object> params, CallableWithArgs<R> callable);
+    public static DefaultHessianProvider getInstance() {
+        return INSTANCE;
+    }
 
-    <R> R withBurlap(Map<String, Object> params, CallableWithArgs<R> callable);
+    @Override
+    protected BurlapProxy getBurlapProxy(Map<String, Object> params) {
+        return HessianClientHolder.getInstance().fetchBurlapProxy(params);
+    }
+
+    @Override
+    protected HessianProxy getHessianProxy(Map<String, Object> params) {
+        return HessianClientHolder.getInstance().fetchHessianProxy(params);
+    }
 }

@@ -24,7 +24,11 @@ import java.util.Map;
 /**
  * @author Andres Almiray
  */
-public interface HessianProvider {
+public interface HessianContributionHandler {
+    void setHessianProvider(HessianProvider provider);
+
+    HessianProvider getHessianProvider();
+
     <R> R withHessian(Map<String, Object> params, Closure<R> closure);
 
     <R> R withBurlap(Map<String, Object> params, Closure<R> closure);
