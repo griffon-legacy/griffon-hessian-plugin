@@ -32,6 +32,8 @@ public class DefaultHessianProvider extends AbstractHessianProvider {
         return INSTANCE;
     }
 
+    private DefaultHessianProvider() {}
+
     @Override
     protected BurlapProxy getBurlapProxy(Map<String, Object> params) {
         return HessianClientHolder.getInstance().fetchBurlapProxy(params);

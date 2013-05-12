@@ -32,12 +32,10 @@ class HessianClientHolder {
         INSTANCE
     }
 
+    private HessianClientHolder() {}
+
     private final Map<String, BurlapProxy> BURLAP = new ConcurrentHashMap<String, BurlapProxy>()
     private final Map<String, HessianProxy> HESSIAN = new ConcurrentHashMap<String, HessianProxy>()
-
-    private HessianClientHolder() {
-
-    }
 
     String[] getBurlapProxyIds() {
         List<String> ids = []
